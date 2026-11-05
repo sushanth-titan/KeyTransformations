@@ -88,6 +88,19 @@
   tbody tr:nth-child(odd){ background:rgba(44,44,44,0.02); }
   .click-here{ font-size:11.5px; color:var(--hint); letter-spacing:.04em; text-transform:uppercase; margin:10px 0 4px; }
 
+  td{ overflow-wrap:anywhere; }
+  @media (max-width:640px){
+    table{ font-size:13px; }
+    th, td{ padding:10px 8px; }
+    table.phases thead{ display:none; }
+    table.phases, table.phases tbody, table.phases tr, table.phases td{ display:block; width:100%; }
+    table.phases tr{ padding:12px 0; border-bottom:1px solid rgba(44,44,44,0.1); }
+    table.phases td{ border:none; padding:4px 8px; }
+    table.phases td:first-child{ color:var(--ink); font-weight:500; }
+    table.phases td:nth-child(2)::before{ content:'What happened'; display:block; font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--hint); margin-bottom:2px; }
+    table.phases td:nth-child(3)::before{ content:'My role'; display:block; font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--gold-2); margin-bottom:2px; }
+  }
+
   .impact-list{ list-style:none; margin:14px 0 18px; padding:0; display:flex; flex-direction:column; gap:10px; }
   .impact-list li{ position:relative; padding-left:22px; font-size:14px; color:var(--ink-2); line-height:1.5; }
   .impact-list li::before{ content:'\2192'; position:absolute; left:0; color:var(--gold); font-weight:600; }
@@ -162,7 +175,7 @@
     </table>
 
     <h2 class="section" style="font-size:16px;">Execution Phases</h2>
-    <table>
+    <table class="phases">
       <thead><tr><th>Phase</th><th>What Happened</th><th>My Role</th></tr></thead>
       <tbody>
         <tr><td>1. Requirements & architecture</td><td>Defined scope across 3 brands, mapped system dependencies</td><td>Set architecture direction with engineering leads; locked scope with leadership</td></tr>
