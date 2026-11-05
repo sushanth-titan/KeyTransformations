@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Key Transformations — Sushanth Kumar</title>
+<link rel="stylesheet" href="AI/fonts/geom.css" />
+<style>
+  @font-face{
+    font-family:'Devina Garden';
+    src:url('AI/fonts/devina-garden/DevinaGarden-Regular.otf') format('opentype'),
+        url('AI/fonts/devina-garden/DevinaGarden-Regular.ttf') format('truetype');
+    font-weight:400; font-style:normal; font-display:swap;
+  }
+  :root{
+    --ink:#2C2C2C; --ink-2:#3F3F46; --muted:#71717A; --hint:#A1A1AA;
+    --line:rgba(255,255,255,0.6); --line-2:rgba(255,255,255,0.35);
+    --gold:#B8956A; --gold-2:#8A6D45;
+    --red:#B91C1C;
+    --ink-soft:rgba(44,44,44,0.06);
+    --sans:'Geom', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    --display:'Devina Garden', 'Cormorant Garamond', ui-serif, Georgia, cursive;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; font-family:var(--sans); color:var(--ink); background:#F4F4F5; -webkit-font-smoothing:antialiased; letter-spacing:0.005em; }
+  ::-webkit-scrollbar{ width:4px } ::-webkit-scrollbar-thumb{ background:#ccc; border-radius:99px }
+
+  .aurora{ position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+  .blob{ position:absolute; border-radius:50%; filter:blur(90px); opacity:0.45; }
+  .blob-1{ width:520px; height:520px; background:#E8B4C0; top:-12%; left:-8%; animation:drift1 24s ease-in-out infinite; }
+  .blob-2{ width:620px; height:620px; background:#C5A575; bottom:-18%; right:-12%; animation:drift2 28s ease-in-out infinite; }
+  .blob-3{ width:420px; height:420px; background:#A5B4FC; top:40%; left:50%; animation:drift3 32s ease-in-out infinite; }
+  .blob-4{ width:360px; height:360px; background:#FDE68A; top:65%; left:10%; animation:drift1 26s ease-in-out infinite reverse; }
+  @keyframes drift1 { 0%,100%{ transform:translate(0,0) scale(1) } 50%{ transform:translate(60px,-40px) scale(1.1) } }
+  @keyframes drift2 { 0%,100%{ transform:translate(0,0) scale(1) } 50%{ transform:translate(-80px,40px) scale(0.95) } }
+  @keyframes drift3 { 0%,100%{ transform:translate(0,0) scale(1) } 50%{ transform:translate(40px,60px) scale(1.05) } }
+
+  .wrap{ position:relative; z-index:2; max-width:980px; margin:0 auto; padding:56px 24px 100px; }
+
+  .glass{
+    background:rgba(255,255,255,0.6);
+    backdrop-filter:blur(30px) saturate(1.4);
+    -webkit-backdrop-filter:blur(30px) saturate(1.4);
+    border-radius:24px;
+    border:1px solid var(--line);
+    box-shadow:0 30px 80px -20px rgba(44,44,44,0.18), inset 0 1px 0 rgba(255,255,255,0.8);
+    padding:36px;
+    margin-bottom:28px;
+  }
+  @media (max-width:640px){ .glass{ padding:22px; border-radius:18px; } }
+
+  .cut{ display:inline-flex; color:var(--gold); vertical-align:middle; }
+
+  header.hero{ text-align:left; margin-bottom:8px; }
+  .eyebrow{ font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
+  h1{ font-family:var(--display); font-weight:400; font-size:56px; line-height:0.95; letter-spacing:0; margin:0 0 10px; text-transform:lowercase; }
+  h1 em{ font-style:normal; color:var(--red); }
+  @media (max-width:640px){ h1{ font-size:38px; } }
+  .role-line{ font-size:15px; color:var(--muted); margin-top:6px; }
+
+  h2.section{ font-family:var(--sans); font-weight:400; font-size:22px; letter-spacing:-0.005em; margin:0 0 6px; display:flex; align-items:center; gap:10px; }
+  h2.section em{ font-family:var(--display); font-style:normal; color:var(--gold); font-size:1.4em; }
+  .meta-row{ display:flex; flex-wrap:wrap; gap:8px 18px; font-size:12.5px; color:var(--muted); margin:6px 0 20px; }
+  .meta-row span strong{ color:var(--ink-2); font-weight:400; }
+
+  p.lead{ font-size:14.5px; line-height:1.7; color:var(--ink-2); margin:0 0 18px; }
+
+  table{ width:100%; border-collapse:collapse; margin:14px 0 22px; font-size:13.5px; }
+  th{ text-align:left; font-weight:400; color:var(--muted); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:10px 14px; border-bottom:1px solid rgba(44,44,44,0.14); }
+  td{ padding:12px 14px; border-bottom:1px solid rgba(44,44,44,0.08); color:var(--ink-2); line-height:1.5; }
+  tr:last-child td{ border-bottom:none; }
+  tbody tr:hover{ background:rgba(184,149,106,0.06); }
+  .num{ font-family:var(--display); color:var(--gold-2); font-size:1.25em; }
+
+  .tag{ display:inline-block; padding:3px 10px; border-radius:99px; background:var(--ink-soft); font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-2); margin-right:6px; }
+  .tag.live{ background:rgba(184,149,106,0.18); color:var(--gold-2); }
+
+  .links{ display:flex; flex-wrap:wrap; gap:8px; margin-top:6px; }
+  .links a{ font-size:12.5px; color:var(--gold-2); text-decoration:none; border-bottom:1px solid rgba(138,109,69,0.35); padding-bottom:1px; }
+  .links a:hover{ color:var(--red); border-color:var(--red); }
+
+  .bottom-line{ border-left:2px solid var(--gold); padding:4px 0 4px 16px; font-size:14px; color:var(--ink-2); margin-top:16px; }
+
+  .divider{ height:1px; background:linear-gradient(90deg, transparent, rgba(44,44,44,0.16), transparent); margin:28px 0; }
+
+  footer{ text-align:center; font-size:11.5px; color:var(--hint); margin-top:40px; letter-spacing:.04em; }
+
+  tbody tr:nth-child(odd){ background:rgba(44,44,44,0.02); }
+  .click-here{ font-size:11.5px; color:var(--hint); letter-spacing:.04em; text-transform:uppercase; margin:10px 0 4px; }
+
+  .impact-list{ list-style:none; margin:14px 0 18px; padding:0; display:flex; flex-direction:column; gap:10px; }
+  .impact-list li{ position:relative; padding-left:22px; font-size:14px; color:var(--ink-2); line-height:1.5; }
+  .impact-list li::before{ content:'\2192'; position:absolute; left:0; color:var(--gold); font-weight:600; }
+</style>
+</head>
+<body>
+
+<div class="aurora">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="blob blob-4"></div>
+</div>
+
+<div class="wrap">
+
+  <header class="hero glass">
+    <div class="eyebrow">Project Portfolio · Key Transformations</div>
+    <h1>what i <em>built</em></h1>
+    <div class="role-line">Sushanth Kumar · Lead Product & Program Manager, TATA Group - Titan Company Limited (India's largest jewellery, luxury and retail company)</div>
+  </header>
+
+  <!-- PROJECT 1 -->
+  <section class="glass">
+    <h2 class="section"><span class="cut">◆</span> Enterprise E-Commerce Technology Transformation</h2>
+    <div class="meta-row">
+      <span><strong>Project Role:</strong> Lead Product Manager & Program Manager - Jewellery Division</span>
+      <span><strong>Duration:</strong> 8 months (2024-2025)</span>
+      <span><strong>Brands:</strong> Tanishq, Mia by Tanishq, Zoya</span>
+      <span><strong>Team:</strong> 40+ software engineers & professionals from Tata Consultancy Services</span>
+    </div>
+
+    <p class="lead">Titan's jewellery e-commerce ran on HCL WebSphere Commerce - outdated, costly to maintain, and disconnected from modern marketing, service, and fulfilment tools. Leadership mandated a replatform to Salesforce Commerce Cloud across three brands simultaneously. The hard part wasn't the platform choice - every connected system had to migrate in lockstep without breaking the live business.</p>
+
+    <div class="click-here">Click here</div>
+    <div class="links">
+      <a href="https://www.tanishq.co.in/" target="_blank">tanishq.co.in</a>
+      <a href="https://www.miabytanishq.com/" target="_blank">miabytanishq.com</a>
+      <a href="https://www.zoya.in/" target="_blank">zoya.in</a>
+    </div>
+
+    <div class="divider"></div>
+
+    <h2 class="section" style="font-size:16px;">What I Owned</h2>
+    <table>
+      <thead><tr><th>Area</th><th>What I Did</th></tr></thead>
+      <tbody>
+        <tr><td>Programme ownership</td><td>Owned roadmap, milestones, deliverables, and sprint priorities end-to-end - not assigned a workstream, owned the whole programme</td></tr>
+        <tr><td>Requirements → Specs</td><td>Converted ambiguous business requirements into product and technology specifications engineering could build against</td></tr>
+        <tr><td>Engineering delivery</td><td>Ran daily stand-ups with 40+ TCS engineers and Scrum Masters; resolved blockers and functional ambiguity directly</td></tr>
+        <tr><td>Integration coordination</td><td>Drove integration across Oracle (inventory), IBM Sterling (OMS), FarEye (logistics), and new MuleSoft middleware</td></tr>
+        <tr><td>Testing & launch</td><td>Defined test expectations; oversaw unit, SIT, and end-to-end testing; owned go-live sign-off</td></tr>
+        <tr><td>Marketing alignment</td><td>Gathered requirements from marketing, prioritised customer-facing features, coordinated launch readiness</td></tr>
+        <tr><td>Change management</td><td>Trained internal teams on catalogue, pricing, and merchandising; drove adoption and handled resistance directly</td></tr>
+        <tr><td>Stakeholder reporting</td><td>Delivered recurring CXO-level progress and risk updates</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="section" style="font-size:16px;">Technology Landscape</h2>
+    <table>
+      <thead><tr><th>Platform</th><th>Role</th></tr></thead>
+      <tbody>
+        <tr><td>Salesforce Commerce Cloud</td><td>Core e-commerce platform (replaced HCL WCS)</td></tr>
+        <tr><td>Salesforce Marketing Cloud</td><td>Marketing automation (replaced MoEngage)</td></tr>
+        <tr><td>Salesforce Service Cloud</td><td>Customer service</td></tr>
+        <tr><td>Salesforce Sales Cloud</td><td>Sales and lead management</td></tr>
+        <tr><td>MuleSoft</td><td>Middleware / system integration layer (net new)</td></tr>
+        <tr><td>Oracle</td><td>Product & inventory management</td></tr>
+        <tr><td>IBM Sterling</td><td>Order management</td></tr>
+        <tr><td>FarEye</td><td>Logistics & fulfilment</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="section" style="font-size:16px;">Execution Phases</h2>
+    <table>
+      <thead><tr><th>Phase</th><th>What Happened</th><th>My Role</th></tr></thead>
+      <tbody>
+        <tr><td>1. Requirements & architecture</td><td>Defined scope across 3 brands, mapped system dependencies</td><td>Set architecture direction with engineering leads; locked scope with leadership</td></tr>
+        <tr><td>2. Platform migration & dev</td><td>Core SFCC build-out begins</td><td>Owned sprint priorities; translated business asks into specs</td></tr>
+        <tr><td>3. Middleware & integrations</td><td>MuleSoft layer connects SFCC ↔ Oracle ↔ Sterling ↔ FarEye</td><td>Coordinated integration sequencing across 4+ external systems</td></tr>
+        <tr><td>4. Sprint reviews & tracking</td><td>Ongoing Agile delivery across 40+ engineers</td><td>Ran daily stand-ups, tracked velocity, unblocked teams</td></tr>
+        <tr><td>5. Testing</td><td>Unit, SIT, end-to-end, business validation</td><td>Defined test criteria; tracked defects to resolution</td></tr>
+        <tr><td>6. UAT & sign-off</td><td>Business stakeholders validate against acceptance criteria</td><td>Drove sign-off process; escalated open risks</td></tr>
+        <tr><td>7. Launch & adoption</td><td>Go-live across 3 brands + internal team training</td><td>Owned launch readiness; led change management post-launch</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="section" style="font-size:16px;">Key Challenges & Resolutions</h2>
+    <table>
+      <thead><tr><th>Challenge</th><th>Resolution</th></tr></thead>
+      <tbody>
+        <tr><td>Multi-platform migration with tightly coupled dependencies</td><td>Sequenced integrations deliberately; treated it as one programme, not separate IT projects</td></tr>
+        <tr><td>Coordinating 40+ professionals + multiple business stakeholders</td><td>Daily stand-ups + direct ownership of blockers instead of routing through intermediaries</td></tr>
+        <tr><td>Internal resistance to new platform/workflows</td><td>Targeted training; communicated concrete benefits rather than mandating compliance top-down</td></tr>
+        <tr><td>Compressed 8-month timeline across 3 brands at once</td><td>Prioritised ruthlessly on sprint scope; kept CXOs informed early so trade-offs were decided fast</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="section" style="font-size:16px;">Business Impact (measured ~1 year post-launch)</h2>
+    <ul class="impact-list">
+      <li><span class="num">23x</span> improvement in website conversion</li>
+      <li><span class="num">30x</span> improvement in digital lead generation</li>
+      <li>Average session time up from <strong>2m 40s to 6 minutes</strong></li>
+      <li>Bounce rate down <strong>-29.3 pts</strong> (40% &rarr; 10.7%)</li>
+      <li><span class="num">$17M</span> reported sales improvement for one brand</li>
+    </ul>
+    <p style="font-size:11.5px; color:var(--hint); margin-top:-6px;">Note: confirm whether $17M is incremental or total revenue before quoting externally; define "conversion" and "lead generation" precisely if asked in interview.</p>
+
+    <div class="bottom-line">I ran this as one integrated business transformation, not an IT lift-and-shift - owning requirements, architecture decisions, engineering coordination, testing, launch, and adoption myself across three brands and 40+ professionals, with measurable commercial outcomes to show for it.</div>
+  </section>
+
+  <!-- OTHER INITIATIVES -->
+  <section class="glass">
+    <h2 class="section"><span class="cut">◆</span> Other Strategic Technology & Product Initiatives</h2>
+
+    <h2 class="section" style="font-size:16px; margin-top:18px;">1. Google Knowledge Graph & Visual Search Integration</h2>
+    <table>
+      <tbody>
+        <tr><td style="width:160px;">Partner</td><td>Google (direct cross-functional collaboration)</td></tr>
+        <tr><td>What I did</td><td>Integrated Google Knowledge Graph capabilities into the website's search ecosystem; improved the existing search algorithm and product discovery</td></tr>
+        <tr><td>Key delivery</td><td>Spearheaded an image-based (visual) search feature, enabling customers to discover products visually</td></tr>
+      </tbody>
+    </table>
+    <div class="click-here">Click here</div>
+    <div class="links">
+      <a href="https://www.miabytanishq.com/" target="_blank">miabytanishq.com</a>
+      <a href="https://www.tanishq.co.in/" target="_blank">tanishq.co.in</a>
+      <a href="https://www.zoya.in/" target="_blank">zoya.in</a>
+    </div>
+
+    <div class="divider"></div>
+
+    <h2 class="section" style="font-size:16px;">2. AI-Led Application Development</h2>
+    <table>
+      <tbody>
+        <tr><td style="width:160px;">What I did</td><td>Led development and launch of an application using an AI-assisted development approach</td></tr>
+        <tr><td>Tools</td><td>Claude Opus + Visual Studio Code to accelerate the development lifecycle</td></tr>
+        <tr><td>Impact</td><td>Compressed development timeline from <strong>~4 months to 17 days</strong>; built and launched at just <strong>0.57% of the estimated cost</strong> of traditional app development</td></tr>
+        <tr><td>Significance</td><td>Measurable proof of using generative AI to re-engineer a delivery process - not just "using AI," but collapsing a multi-month build into weeks at a fraction of the cost</td></tr>
+      </tbody>
+    </table>
+    <div class="click-here">Click here</div>
+    <div class="links"><a href="https://apps.apple.com/in/app/beyon-house-of-titan/id6760547938" target="_blank">BEYON - House of Titan (App Store)</a></div>
+
+    <div class="divider"></div>
+
+    <h2 class="section" style="font-size:16px;">3. Lab-Grown Diamond Brand (BEYON) - Digital Platform Modernisation <span class="tag live">Ongoing</span></h2>
+    <table>
+      <tbody>
+        <tr><td style="width:160px;">What I'm doing</td><td>Leading digital platform modernisation for Titan's emerging lab-grown diamond brand, BEYON</td></tr>
+        <tr><td>Scope</td><td>Technology integrations, platform enhancements, ecosystem alignment for a new brand</td></tr>
+        <tr><td>Goal</td><td>Building scalable digital infrastructure to support the brand's growth and evolving requirements</td></tr>
+      </tbody>
+    </table>
+    <div class="click-here">Click here (live UI prototypes)</div>
+    <div class="links">
+      <a href="https://sushanth-titan.github.io/BeyonRevamp/Beyon%20Revamp/Login/login-aurora-editorial.html" target="_blank">Login</a>
+      <a href="https://sushanth-titan.github.io/BeyonRevamp/Beyon%20Revamp/PDP/index.html" target="_blank">PDP</a>
+      <a href="https://sushanth-titan.github.io/BeyonRevamp/Beyon%20Revamp/PLP/index.html" target="_blank">PLP</a>
+      <a href="https://sushanth-titan.github.io/BeyonRevamp/Beyon%20Revamp/Cart/cart.html" target="_blank">Cart</a>
+      <a href="https://sushanth-titan.github.io/BeyonRevamp/Beyon%20Revamp/Cart/checkout.html" target="_blank">Checkout</a>
+    </div>
+
+    <div class="bottom-line">Beyond these major initiatives, I have consistently taken ownership of multiple strategic product and technology initiatives across the organisation - spanning enterprise platform transformations, AI-led product development, search and discovery innovations, digital commerce modernisation, and cross-functional technology integrations with partners like Google, internal engineering teams, business stakeholders, and senior leadership.</div>
+  </section>
+
+  <footer>Key Transformations · Portfolio Summary · Prepared 2026</footer>
+
+</div>
+</body>
+</html>

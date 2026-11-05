@@ -1,0 +1,28 @@
+@font-face {
+  font-family: 'Geom';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/geom/v1/X7n_4bw6Cf6j2N-_7PYnX8v0Ggg5rF5z.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Geom';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/geom/v1/X7n_4bw6Cf6j2N-_7PYnX8v0GggLrF5z.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Geom';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/geom/v1/X7n_4bw6Cf6j2N-_7PYnX8v0Ggjnq15z.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Geom';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/geom/v1/X7n_4bw6Cf6j2N-_7PYnX8v0Ggjeq15z.ttf) format('truetype');
+}
